@@ -28,6 +28,19 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NightVisionActivity.class);
         startActivity(intent);
     }
+    public void startRoverController(View view) {
+        Intent intent = new Intent(this, RoverControllerActivity.class);
+        startActivity(intent);
+    }
 
+    public void startAerialController(View view) {
+        Intent intent = new Intent(this, AerialControllerActivity.class);
+        startActivity(intent);
+    }
+
+    public void startVisionController(View view) {
+        Intent intent = new Intent(this, VisionControllerActivity.class);
+        startActivity(intent);
+    }
     public native String stringFromJNI();
 }

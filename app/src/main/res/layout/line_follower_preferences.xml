@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <PreferenceCategory
+        android:title="Video Settings"
+        android:key="first_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ListPreference
+            android:key="vid_res"
+            android:title="Resolution"
+            android:summary="Resize the default video frame to this size"
+            android:defaultValue="1"
+            android:entries="@array/vid_res"
+            android:entryValues="@array/vid_res_values"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="PID Control Parameters"
+        android:key="second_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <EditTextPreference
+            android:key="min_spd"
+            android:title="Minimum Speed"
+            android:dialogTitle="Minimum Speed"
+            android:dialogMessage="Set minimum speed"
+            android:defaultValue="50.0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditTextPreference
+            android:key="max_spd"
+            android:title="Maximum Speed"
+            android:dialogTitle="Maximum Speed"
+            android:dialogMessage="Set maximum speed"
+            android:defaultValue="80.0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditTextPreference
+            android:key="pid_kp"
+            android:title="PID Kp"
+            android:dialogTitle="PID Kp"
+            android:dialogMessage="Set PID proportional gain."
+            android:defaultValue="85.0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditTextPreference
+            android:key="pid_kd"
+            android:title="PID Kd"
+            android:dialogTitle="PID Kd"
+            android:dialogMessage="Set PID differential gain."
+            android:defaultValue="85.0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <EditTextPreference
+            android:key="pid_ki"
+            android:title="PID Ki"
+            android:dialogTitle="PID Ki"
+            android:dialogMessage="Set PID integral gain."
+            android:defaultValue="1.0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

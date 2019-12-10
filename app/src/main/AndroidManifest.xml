@@ -7,6 +7,9 @@
     <uses-feature android:name="android.hardware.camera.front" />
     <uses-feature android:name="android.hardware.camera.front.autofocus" />
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,7 +17,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NightVisionActivity" android:screenOrientation="landscape" android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -24,6 +26,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".NightVisionActivity" android:screenOrientation="landscape" android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".AerialControllerActivity" android:screenOrientation="landscape"></activity>
+        <activity android:name=".RoverControllerActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".VisionControllerActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".bluetooth.OptionsActivity" />
+        <activity android:name=".bluetooth.DeviceListActivity" />
+
     </application>
 
 </manifest>
