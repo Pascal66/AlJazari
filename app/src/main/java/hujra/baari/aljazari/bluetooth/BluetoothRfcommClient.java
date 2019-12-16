@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import hujra.baari.aljazari.RoverControllerActivity;
+import hujra.baari.aljazari.SingleJoystickControllerActivity;
 
 public class BluetoothRfcommClient {
 
@@ -53,7 +53,7 @@ public class BluetoothRfcommClient {
         mState = state;
 
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(RoverControllerActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+        mHandler.obtainMessage(SingleJoystickControllerActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
     }
 
     /**
@@ -113,9 +113,9 @@ public class BluetoothRfcommClient {
         mConnectedThread.start();
 
         // Send the name of the connected device back to the UI Activity
-        Message msg = mHandler.obtainMessage(RoverControllerActivity.MESSAGE_DEVICE_NAME);
+        Message msg = mHandler.obtainMessage(SingleJoystickControllerActivity.MESSAGE_DEVICE_NAME);
         Bundle bundle = new Bundle();
-        bundle.putString(RoverControllerActivity.DEVICE_NAME, device.getName());
+        bundle.putString(SingleJoystickControllerActivity.DEVICE_NAME, device.getName());
         msg.setData(bundle);
         mHandler.sendMessage(msg);
 
@@ -153,9 +153,9 @@ public class BluetoothRfcommClient {
     private void connectionFailed() {
         setState(STATE_NONE);
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(RoverControllerActivity.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(SingleJoystickControllerActivity.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(RoverControllerActivity.TOAST, "Unable to connect device");
+        bundle.putString(SingleJoystickControllerActivity.TOAST, "Unable to connect device");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
@@ -166,9 +166,9 @@ public class BluetoothRfcommClient {
     private void connectionLost() {
         setState(STATE_NONE);
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(RoverControllerActivity.MESSAGE_TOAST);
+        Message msg = mHandler.obtainMessage(SingleJoystickControllerActivity.MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(RoverControllerActivity.TOAST, "Device connection was lost");
+        bundle.putString(SingleJoystickControllerActivity.TOAST, "Device connection was lost");
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
@@ -263,7 +263,7 @@ public class BluetoothRfcommClient {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
                     // Send the obtained bytes to the UI Activity
-                    mHandler.obtainMessage(RoverControllerActivity.MESSAGE_READ, bytes, -1, buffer)
+                    mHandler.obtainMessage(SingleJoystickControllerActivity.MESSAGE_READ, bytes, -1, buffer)
                             .sendToTarget();
                 } catch (IOException e) {
                     //
@@ -280,7 +280,7 @@ public class BluetoothRfcommClient {
             try {
                 mmOutStream.write(buffer);
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(RoverControllerActivity.MESSAGE_WRITE, -1, -1, buffer)
+                mHandler.obtainMessage(SingleJoystickControllerActivity.MESSAGE_WRITE, -1, -1, buffer)
                         .sendToTarget();
             } catch (IOException e) {
                 //

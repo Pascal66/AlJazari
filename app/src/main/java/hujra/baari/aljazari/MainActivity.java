@@ -28,18 +28,24 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NightVisionActivity.class);
         startActivity(intent);
     }
-    public void startRoverController(View view) {
-        Intent intent = new Intent(this, RoverControllerActivity.class);
+    public void startSingleJoystickController(View view) {
+        Intent intent = new Intent(this, SingleJoystickControllerActivity.class);
         startActivity(intent);
     }
 
-    public void startAerialController(View view) {
-        Intent intent = new Intent(this, AerialControllerActivity.class);
+
+    public void startDualJoystickController(View view) {
+        Intent intent = new Intent(this, DualJoystickControllerActivity.class);
         startActivity(intent);
     }
 
-    public void startVisionController(View view) {
-        Intent intent = new Intent(this, VisionControllerActivity.class);
+    public void startVisionBasedController(View view) {
+        Intent intent = new Intent(this, VisionBasedControllerActivity.class);
+        startActivity(intent);
+    }
+
+    public void startConfigPacket(View view) {
+        Intent intent = new Intent(this, ConfigPacketActivity.class);
         startActivity(intent);
     }
     public native String stringFromJNI();

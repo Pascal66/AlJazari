@@ -6,10 +6,16 @@ if ~isempty(instrfind)
       delete(instrfind);
 end
 
+s = serial('COM6');
+fopen(s)
+
+parse_config_packet(s)
+
+
 % s = Bluetooth('Phoenix BT Link',1);
 % fopen(s);
     
-s = serial('COM8');
+s = serial('COM6');
 fopen(s)
 while(1)
     m = ' ';
@@ -70,6 +76,37 @@ close(joy);
 fclose(s)
 delete(s)
 clear s
+
+function parse_config_packet(s)
+    while(1)
+        m = ' ';
+        while(1)
+            m = rcv_uart(s);
+            if(m=='#')
+                m = rcv_uart(s);
+                if(m=='C')
+                    m = rcv_uart(s);
+                    if(m=='G')
+                    break;%header found
+                    end
+                end
+            end
+        end
+        a = [];
+        for i=1:72
+            a(i) = uint8(rcv_uart(s));
+        end
+        
+        v = zeros(1,18);
+        for j=1:18
+            b = uint8(a((j-1)*4+1:(j-1)*4+4));
+            v(j) = typecast(fliplr(b),'single');
+            fprintf('%f\t', v(j));
+        end
+            fprintf('\n');
+    
+    end
+end
 
 function m = rcv_uart(s)
     while(1)

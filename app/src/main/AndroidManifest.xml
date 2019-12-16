@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="hujra.baari.aljazari">
+
     <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.front" />
@@ -17,6 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ConfigPacketActivity" android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -26,14 +29,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".NightVisionActivity" android:screenOrientation="landscape" android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".AerialControllerActivity" android:screenOrientation="landscape"></activity>
-        <activity android:name=".RoverControllerActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name=".VisionControllerActivity" android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".NightVisionActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DualJoystickControllerActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name=".SingleJoystickControllerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".VisionBasedControllerActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".bluetooth.OptionsActivity" />
         <activity android:name=".bluetooth.DeviceListActivity" />
-
     </application>
 
 </manifest>
