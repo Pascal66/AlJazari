@@ -1,5 +1,5 @@
 # AlJazari
-A collection of Android tools related to Computer Vision, Machine Learning &amp; Robotics
+A collection of Android-based controllers for Robots using different communication channels e.g. TCP(UDP + TCP sockets), ROS and Bluetooth.  
 
 Credits:
 1- Single/Dual Joystick and BT connectivity code is based on Dmitry Ananyev's project (https://github.com/altexdim/android-bluetooth-joystick)

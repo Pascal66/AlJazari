@@ -1,5 +1,5 @@
 # AlJazari
-A collection of Android-based controllers for Robots using different communication channels e.g. TCP(UDP + TCP sockets), ROS and Bluetooth.  
+A collection of Android-based controllers for Robots using different communication channels e.g. WiFi(UDP + TCP sockets), ROS and Bluetooth.  
 
 Credits:
 1- Single/Dual Joystick and BT connectivity code is based on Dmitry Ananyev's project (https://github.com/altexdim/android-bluetooth-joystick)
