@@ -9,7 +9,7 @@
     android:weightSum="1">
 
 
-    <hujra.baari.aljazari.joystick.DualJoystickView
+    <hujra.aljazari.joystick.DualJoystickView
         android:id="@+id/dualjoystickView"
         android:layout_width="651dp"
         android:layout_height="278dp"
