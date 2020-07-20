@@ -1,4 +1,4 @@
-package hujra.aljazari;
+package hujra.aljazari.SingleJoystickController;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,9 +15,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +32,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static java.lang.Math.abs;
-import hujra.aljazari.bluetooth.OptionsActivity;
+
+import hujra.aljazari.R;
 import hujra.aljazari.joystick.JoystickMovedListener;
 import hujra.aljazari.bluetooth.DeviceListActivity;
 import hujra.aljazari.bluetooth.BluetoothRfcommClient;
@@ -44,6 +49,8 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
 
     private DataOutputStream socket_link;
     private WiFiCommLinkSetup wifi_link;
+    private String server_ip;
+    private int server_port;
 
     // Message types sent from the BluetoothRfcommClient Handler
     public static final int MESSAGE_STATE_CHANGE = 1;
@@ -77,7 +84,7 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
     // polar coordinates
     private double mRadiusJS = 0;
     private double mAngleJS = 0;
-    private boolean mCenterL = true;
+    private boolean mCenter = true;
     private int mDataFormat;
     private float lspeed = 0;
     private float rspeed = 0;
@@ -106,26 +113,22 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_single_joystick);
 
-
-
-//        mDualJoystick = (DualJoystickView)findViewById(R.id.dualjoystickView);
-//        mDualJoystick.setOnJostickMovedListener(_listenerLeft, _listenerRight);
         mSingleJoystick = (SingleJoystickView)findViewById(R.id.singlejoystickView);
         mSingleJoystick.setOnJostickMovedListener(_listenerLeft);
 
-        // mDualJoystick.setYAxisInverted(false, false);
-
         mTxtStatus = (TextView) findViewById(R.id.txt_status);
         mTVjoystickreadings = (TextView) findViewById(R.id.txt_dataL);
-        // mTxtDataR = (TextView) findViewById(R.id.txt_dataR);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         prefs.registerOnSharedPreferenceChangeListener(this);
 
         // mUpdatePeriod = prefs.getLong( "updates_interval", 200 ); // in milliseconds
-        mUpdatePeriod = Long.parseLong(prefs.getString( "updates_interval", "200" ));
-        mMaxTimeoutCount = Integer.parseInt(prefs.getString( "maxtimeout_count", "20" ));
-        mDataFormat = Integer.parseInt(prefs.getString( "data_format", "7" ));
+        mUpdatePeriod = Long.parseLong(prefs.getString( "sj_updates_interval", "200" ));
+        mMaxTimeoutCount = Integer.parseInt(prefs.getString( "sj_maxtimeout_count", "20" ));
+        mDataFormat = Integer.parseInt(prefs.getString( "sj_data_format", "1" ));
+
+        server_ip = prefs.getString("IP_data", "192.168.4.1");
+        server_port = Integer.parseInt(prefs.getString("Port_data", "5000"));
 
         mStrA = prefs.getString( "btnA_data", "A" );
         mStrB = prefs.getString( "btnB_data", "B" );
@@ -182,8 +185,9 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
     public boolean onOptionsItemSelected(MenuItem item) {
         if ( item == mItemConnect_WiFi ) {
             connection_type = 0;
-            wifi_link = new WiFiCommLinkSetup("192.168.1.4", 5000);
+            wifi_link = new WiFiCommLinkSetup(server_ip, server_port);
             wifi_link.start();
+            mTxtStatus.setText("Connected to :" + server_ip + String.valueOf(server_port));
 
         } else if ( item == mItemConnect_BT ) {
             connection_type = 2;
@@ -205,17 +209,23 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
             startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE);
 
         } else if ( item == mItemOptions ) {
-            startActivity( new Intent(this, OptionsActivity.class) );
+            startActivity( new Intent(this, SingleJoystickOptionsActivity.class) );
+            /*
+            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+String strUserName = SP.getString("username", "NA");
+boolean bAppUpdates = SP.getBoolean("applicationUpdates",false);
+String downloadType = SP.getString("downloadType","1");
+             */
         }
         return super.onOptionsItemSelected(item);
     }
 
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if ( key.equals("updates_interval") ) {
+        if ( key.equals("sj_updates_interval") ) {
             // reschedule task
             mUpdateTimer.cancel();
             mUpdateTimer.purge();
-            mUpdatePeriod = Long.parseLong(prefs.getString( "updates_interval", "200" ));
+            mUpdatePeriod = Long.parseLong(prefs.getString( "sj_updates_interval", "200" ));
             mUpdateTimer = new Timer();
             mUpdateTimer.schedule(new TimerTask() {
                 @Override
@@ -223,10 +233,15 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
                     UpdateMethod();
                 }
             }, mUpdatePeriod, mUpdatePeriod);
-        }else if( key.equals("maxtimeout_count") ){
-            mMaxTimeoutCount = Integer.parseInt(prefs.getString( "maxtimeout_count", "20" ));
-        }else if( key.equals("data_format") ){
-            mDataFormat = Integer.parseInt(prefs.getString( "data_format", "7" ));
+        }else if( key.equals("sj_maxtimeout_count") ){
+            mMaxTimeoutCount = Integer.parseInt(prefs.getString( "sj_maxtimeout_count", "20" ));
+        }else if( key.equals("sj_data_format") ){
+            mDataFormat = Integer.parseInt(prefs.getString( "sj_data_format", "1" ));
+        }else if( key.equals("IP_data") ){
+            server_ip = prefs.getString( "IP_data", "192.168.4.1" );
+        }else if( key.equals("Port_data") ){
+            server_port = Integer.parseInt(prefs.getString( "Port_data", "5000" ));
+
         }else if( key.equals("btnA_data") ){
             mStrA = prefs.getString( "btnA_data", "A" );
         }else if( key.equals("btnB_data") ){
@@ -287,37 +302,11 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
 
         public void OnMoved(int pan, int tilt) {
             mRadiusJS = Math.min(Math.sqrt((pan*pan) + (tilt*tilt))*2.01,255);
-            mAngleJS = Math.atan2(tilt,pan);//*57.295779513082320876798154814105;
-
-            //Some very stupid problem does not allow rspeed/lspeed to take values greater than 127. Arduino somehow does
-            //not receive the intended values. Debugging left to some other day! Build a solid communication protocol.
-            float limit = 254;
-            float speed_base = -(float)tilt*limit/70; //[-255 255]
-            /*if(speed_base>1)
-                speed_base = speed_base + 40;
-            if(speed_base>limit)
-                speed_base = limit;*/
-
-            float steer_value = (float)pan*limit/70; //[-255 255]
-            lspeed = speed_base + steer_value;
-            rspeed = speed_base - steer_value;
-            if(lspeed<-(limit-0.5)) lspeed = -limit;
-            if(rspeed<-(limit-0.5)) rspeed = -limit;
-            if(lspeed>(limit-0.5)) lspeed = limit;
-            if(rspeed>(limit-0.5)) rspeed = limit;
-
-            lrdir = 0;  //wheel direction encoding in a single byte
-            if(lspeed<0)
-                lrdir = lrdir + 2;
-            if(rspeed<0)
-                lrdir = lrdir + 1;
-
-//            mTxtDataL.setText(String.format("( r%.2f, %.0f\u00B0 )(%d,%d)", Math.min(mRadiusL, 100), mAngleL * 180 / Math.PI,pan,tilt));
-            mTVjoystickreadings.setText(String.format("(%.2f,%.2f)", mRadiusJS, mAngleJS));
-            lspeed = abs(lspeed);
-            rspeed = abs(rspeed);
-
-            mCenterL = false;
+            mAngleJS = Math.atan2(tilt,pan);
+            mTVjoystickreadings.setText(String.format("(%.2f,%.2f)", mRadiusJS, mAngleJS*57.295779513082320876798154814105));
+            //if (wifi_link.isConnected())
+            //mTxtStatus.setText(R.string.title_connected_to + "192.168.1.4" + "5000");
+            mCenter = false;
         }
 
         public void OnReleased() {
@@ -327,7 +316,7 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
         public void OnReturnedToCenter() {
             mRadiusJS = mAngleJS = 0;
             UpdateMethod();
-            mCenterL = true;
+            mCenter = true;
         }
     };
 
@@ -363,61 +352,9 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
     }
 
     private void UpdateMethod() {
-
-        // if either of the joysticks is not on the center, or timeout occurred
-        if(!mCenterL || (mTimeoutCounter>=mMaxTimeoutCount && mMaxTimeoutCount>-1) ) {
-            // limit to {0..10}
-            byte radiusL = (byte) ( Math.min(mRadiusJS, 100.0 ) );
-            // scale to {0..35}
-            byte angleL = (byte) ( mAngleJS * 18.0 / Math.PI + 36.0 + 0.5 );
-            if( angleL >= 36 )	angleL = (byte)(angleL-36);
-
-            if (D) {
-                Log.d(TAG, String.format("%d, %d", radiusL, angleL ) );
-            }
-
-            if( mDataFormat==4 ) {
-                // raw 4 bytes
-                sendMessage( new String(new byte[] {
-                        radiusL, angleL } ) );
-            }else if( mDataFormat==5 ) {
-                // start with 0x55
-                sendMessage( new String(new byte[] {
-                        0x55, radiusL, angleL } ) );
-            }else if( mDataFormat==6 ) {
-                // use STX & ETX
-                sendMessage( new String(new byte[] {
-                        0x02, radiusL, angleL, 0x03 } ) );
-            }else if( mDataFormat==7 ) {
-                // use "$PWM=12,23*"
-
-                // radiusL = 0 .. 10
-                // angleL = 0 .. 35
-                int radius = 126 * radiusL / 70; // maximum value = 100
-                int angle = angleL * 10;
-                double angleRadians = Math.toRadians(angle);
-
-                int leftPwm;
-                int rightPwm;
-
-                if (angle <= 180) {
-                    rightPwm = angle > 90? -radius: radius;
-                    leftPwm = (int)Math.round(Math.cos(angleRadians) * radius);
-                } else {
-                    leftPwm = angle < 270? -radius: radius;
-                    rightPwm = (int)Math.round(Math.cos(angleRadians) * radius);
-                }
-
-//                sendMessage("$PWM=" + leftPwm + "," + rightPwm + "*");
-                leftPwm = -100;
-                rightPwm = 0;
-
-                //String msg = "s" + String.valueOf(Character.toChars((int)lspeed)) + String.valueOf(Character.toChars((int)rspeed)) + String.valueOf(Character.toChars((int)lspeed_dir)) + String.valueOf(Character.toChars((int)rspeed_dir));
-                // A single starting character, such as 's' above, does not work due to some synch problems with Arduino.
-                //Interlacing the message with 'l', 'r', 'd' removes the problem. Maybe slower rates won't have this problem.
-                //String msg = "l" + String.valueOf(Character.toChars((char)lspeed)) + "r" + String.valueOf(Character.toChars((char)rspeed)) + "d" + String.valueOf(Character.toChars((char)lrdir));
-                lspeed = (byte)mRadiusJS;
-                rspeed = (byte)mRadiusJS;
+        // if joystick is not on the center, or timeout occurred
+        if(!mCenter || (mTimeoutCounter>=mMaxTimeoutCount && mMaxTimeoutCount>-1) ) {
+            if( mDataFormat==1 ) {
                 double strspeed = abs(Math.cos(mAngleJS)) * mRadiusJS;
                 byte dir1,dir2;
                 if(mAngleJS<0)
@@ -428,7 +365,6 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
                     dir2 = 3;
                 else
                     dir2 = 2;
-                String msg = new String(new byte[] {'$',0x02, (byte)(-28) });
                 msg_len = 8;
                 msg_buffer[0] = '$';
                 msg_buffer[1] = 0x02;
@@ -438,7 +374,10 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
                 msg_buffer[5] = dir1;
                 msg_buffer[6] = (byte)strspeed;
                 msg_buffer[7] = dir2;
-                sendMessage(msg);
+                sendMessage("");
+            }
+            else if( mDataFormat==1 ) {
+
             }
 
             mTimeoutCounter = 0;
@@ -539,7 +478,6 @@ public class SingleJoystickControllerActivity extends AppCompatActivity implemen
                     in = new DataInputStream(inFromServer);
                     connected = true;
                     CommLinkRxconnected = true;*/
-
                     Log.i(TAG, "Connected ?: " + client.getRemoteSocketAddress());
                     connected = true;
                 } catch (IOException e) {

@@ -15,6 +15,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import hujra.aljazari.SingleJoystickController.SingleJoystickControllerActivity;
+
 public class MainActivity extends AppCompatActivity {
     private RadioGroup radioCtrlGroup;
     private RadioButton radioCtrlType;

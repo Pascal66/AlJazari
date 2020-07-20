@@ -23,7 +23,7 @@
     <string name="btnD_text">D</string>
     <string name="dataL_text">( 0, 0 )</string>
     <string name="dataR_text">( 0, 0 )</string>
-    <string name="status_text">Hello there</string>
+    <string name="status_text">Not Connected</string>
     <string name="bt_status_text_lf">BT Status</string>
     <string name="fps_str">0 fps</string>
 </resources>

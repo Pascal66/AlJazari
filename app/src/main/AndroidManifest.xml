@@ -18,12 +18,13 @@
         </activity>
 
         <activity
-            android:name=".SingleJoystickControllerActivity"
+            android:name=".SingleJoystickController.SingleJoystickControllerActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".DualJoystickControllerActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".ConfigPacketActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".SingleJoystickController.SingleJoystickOptionsActivity" />
         <activity android:name=".bluetooth.OptionsActivity" />
         <activity android:name=".bluetooth.DeviceListActivity" />
     </application>

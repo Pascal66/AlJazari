@@ -13,7 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import hujra.aljazari.SingleJoystickControllerActivity;
+import hujra.aljazari.SingleJoystickController.SingleJoystickControllerActivity;
 
 public class BluetoothRfcommClient {
 
