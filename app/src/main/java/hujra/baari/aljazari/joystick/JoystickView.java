@@ -486,20 +486,18 @@ public class JoystickView extends View {
 
             for (int i = 0; i < numberOfFrames; i++) {
                 final int j = i;
-                postDelayed(new Runnable() {
-                    public void run() {
-                        touchX += intervalsX;
-                        if ( autoReturnToCenter )
-                            touchY += intervalsY;
+                postDelayed(() -> {
+					touchX += intervalsX;
+					if ( autoReturnToCenter )
+						touchY += intervalsY;
 
-                        reportOnMoved();
-                        invalidate();
+					reportOnMoved();
+					invalidate();
 
-                        if (moveListener != null && j == numberOfFrames - 1) {
-                            moveListener.OnReturnedToCenter();
-                        }
-                    }
-                }, i * 40);
+					if (moveListener != null && j == numberOfFrames - 1) {
+						moveListener.OnReturnedToCenter();
+					}
+				}, i * 40);
             }
 
             if (moveListener != null) {

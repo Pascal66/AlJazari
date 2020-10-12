@@ -20,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Example of a call to a native method
-        TextView tv = findViewById(R.id.sample_text);
-        tv.setText(stringFromJNI());
+        //TextView tv = findViewById(R.id.sample_text);
+        //tv.setText(stringFromJNI());
     }
 
     public void startNightVisionActivity(View view) {
@@ -48,5 +48,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ConfigPacketActivity.class);
         startActivity(intent);
     }
-    public native String stringFromJNI();
+//    public native String stringFromJNI();
 }

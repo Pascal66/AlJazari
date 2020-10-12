@@ -4,9 +4,21 @@
 # Sets the minimum version of CMake required to build the native library.
 
 cmake_minimum_required(VERSION 3.4.1)
-    include_directories(D:/RnD/Tools_n_Resources/OCV/OpenCV-android-sdk/sdk/native/jni/include)
+    set(pathToOpenCV C:/Users/Pascal/Desktop/Apk/opencv-4.1.2-android-sdk)
+
+    #Two sets suggested by Bruno Alexandre Krinski 20160825
+    set(CMAKE_VERBOSE_MAKEFILE on)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+
+    #Addition suggested by Bruno Alexandre Krinski 20160825
+    include_directories(${pathToOpenCV}/sdk/native/jni/include)
+    set(CMAKE_CXX_STANDARD 17)
+#   find_package(OpenCV REQUIRED)
+
+#   include_directories(${OpenCV_INCLUDE_DIRS})
     add_library( lib_opencv SHARED IMPORTED )
-    set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION D:/RnD/Tools_n_Resources/OCV/OpenCV-android-sdk/sdk/native/libs/${ANDROID_ABI}/libopencv_java4.so)
+#    set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION D:/RnD/Tools_n_Resources/OCV/OpenCV-android-sdk/sdk/native/libs/${ANDROID_ABI}/libopencv_java4.so)
+    set_target_properties(lib_opencv PROPERTIES IMPORTED_LOCATION ${pathToOpenCV}/sdk/native/libs/${ANDROID_ABI}/libopencv_java4.so)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.

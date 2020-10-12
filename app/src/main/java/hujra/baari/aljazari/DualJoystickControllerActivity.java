@@ -179,10 +179,7 @@ public class DualJoystickControllerActivity extends AppCompatActivity implements
             AlertDialog about = new AlertDialog.Builder(this).create();
             about.setCancelable(false);
             about.setMessage("Binkamaat v1.0\nhttp://sites.google.com/view/4mbilal");
-            about.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                }
+            about.setButton(DialogInterface.BUTTON_POSITIVE, "OK", (dialogInterface, i) -> {
             });
             about.show();
         }
@@ -190,30 +187,38 @@ public class DualJoystickControllerActivity extends AppCompatActivity implements
     }
 
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if ( key.equals("updates_interval") ) {
-            // reschedule task
-            mUpdateTimer.cancel();
-            mUpdateTimer.purge();
-            mUpdatePeriod = Long.parseLong(prefs.getString( "updates_interval", "200" ));
-            mUpdateTimer = new Timer();
-            mUpdateTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    UpdateMethod();
-                }
-            }, mUpdatePeriod, mUpdatePeriod);
-        }else if( key.equals("maxtimeout_count") ){
-            mMaxTimeoutCount = Integer.parseInt(prefs.getString( "maxtimeout_count", "20" ));
-        }else if( key.equals("data_format") ){
-            mDataFormat = Integer.parseInt(prefs.getString( "data_format", "7" ));
-        }else if( key.equals("btnA_data") ){
-            mStrA = prefs.getString( "btnA_data", "A" );
-        }else if( key.equals("btnB_data") ){
-            mStrB = prefs.getString( "btnB_data", "B" );
-        }else if( key.equals("btnC_data") ){
-            mStrC = prefs.getString( "btnC_data", "C" );
-        }else if( key.equals("btnD_data") ){
-            mStrD = prefs.getString( "btnD_data", "D" );
+        switch (key) {
+            case "updates_interval":
+                // reschedule task
+                mUpdateTimer.cancel();
+                mUpdateTimer.purge();
+                mUpdatePeriod = Long.parseLong(prefs.getString("updates_interval", "200"));
+                mUpdateTimer = new Timer();
+                mUpdateTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        UpdateMethod();
+                    }
+                }, mUpdatePeriod, mUpdatePeriod);
+                break;
+            case "maxtimeout_count":
+                mMaxTimeoutCount = Integer.parseInt(prefs.getString("maxtimeout_count", "20"));
+                break;
+            case "data_format":
+                mDataFormat = Integer.parseInt(prefs.getString("data_format", "7"));
+                break;
+            case "btnA_data":
+                mStrA = prefs.getString("btnA_data", "A");
+                break;
+            case "btnB_data":
+                mStrB = prefs.getString("btnB_data", "B");
+                break;
+            case "btnC_data":
+                mStrC = prefs.getString("btnC_data", "C");
+                break;
+            case "btnD_data":
+                mStrD = prefs.getString("btnD_data", "D");
+                break;
         }
     }
 
@@ -242,11 +247,7 @@ public class DualJoystickControllerActivity extends AppCompatActivity implements
         new AlertDialog.Builder(this)
                 .setTitle("Bluetooth Joystick")
                 .setMessage("Close this controller?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
+                .setPositiveButton("Yes", (dialog, which) -> finish())
                 .setNegativeButton("No", null)
                 .show();
     }
@@ -339,7 +340,8 @@ public class DualJoystickControllerActivity extends AppCompatActivity implements
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
             case REQUEST_CONNECT_DEVICE:
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
