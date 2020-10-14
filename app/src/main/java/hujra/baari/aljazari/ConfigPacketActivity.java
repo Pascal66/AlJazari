@@ -141,10 +141,7 @@ public class ConfigPacketActivity extends AppCompatActivity  implements SharedPr
             AlertDialog about = new AlertDialog.Builder(this).create();
             about.setCancelable(false);
             about.setMessage("Binkamaat v1.0\nhttp://sites.google.com/view/4mbilal");
-            about.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                }
+            about.setButton(DialogInterface.BUTTON_POSITIVE, "OK", (dialogInterface, i) -> {
             });
             about.show();
         }
@@ -152,30 +149,38 @@ public class ConfigPacketActivity extends AppCompatActivity  implements SharedPr
     }
 
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if ( key.equals("updates_interval") ) {
-            // reschedule task
-            mUpdateTimer.cancel();
-            mUpdateTimer.purge();
-            mUpdatePeriod = Long.parseLong(prefs.getString( "updates_interval", "200" ));
-            mUpdateTimer = new Timer();
-            mUpdateTimer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    UpdateMethod();
-                }
-            }, mUpdatePeriod, mUpdatePeriod);
-        }else if( key.equals("maxtimeout_count") ){
-            mMaxTimeoutCount = Integer.parseInt(prefs.getString( "maxtimeout_count", "20" ));
-        }else if( key.equals("data_format") ){
-            mDataFormat = Integer.parseInt(prefs.getString( "data_format", "7" ));
-        }else if( key.equals("btnA_data") ){
-            mStrA = prefs.getString( "btnA_data", "A" );
-        }else if( key.equals("btnB_data") ){
-            mStrB = prefs.getString( "btnB_data", "B" );
-        }else if( key.equals("btnC_data") ){
-            mStrC = prefs.getString( "btnC_data", "C" );
-        }else if( key.equals("btnD_data") ){
-            mStrD = prefs.getString( "btnD_data", "D" );
+        switch (key) {
+            case "updates_interval":
+                // reschedule task
+                mUpdateTimer.cancel();
+                mUpdateTimer.purge();
+                mUpdatePeriod = Long.parseLong(prefs.getString("updates_interval", "200"));
+                mUpdateTimer = new Timer();
+                mUpdateTimer.schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        UpdateMethod();
+                    }
+                }, mUpdatePeriod, mUpdatePeriod);
+                break;
+            case "maxtimeout_count":
+                mMaxTimeoutCount = Integer.parseInt(prefs.getString("maxtimeout_count", "20"));
+                break;
+            case "data_format":
+                mDataFormat = Integer.parseInt(prefs.getString("data_format", "7"));
+                break;
+            case "btnA_data":
+                mStrA = prefs.getString("btnA_data", "A");
+                break;
+            case "btnB_data":
+                mStrB = prefs.getString("btnB_data", "B");
+                break;
+            case "btnC_data":
+                mStrC = prefs.getString("btnC_data", "C");
+                break;
+            case "btnD_data":
+                mStrD = prefs.getString("btnD_data", "D");
+                break;
         }
     }
 
@@ -204,11 +209,7 @@ public class ConfigPacketActivity extends AppCompatActivity  implements SharedPr
         new AlertDialog.Builder(this)
                 .setTitle("Bluetooth Joystick")
                 .setMessage("Close this controller?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
+                .setPositiveButton("Yes", (dialog, which) -> finish())
                 .setNegativeButton("No", null)
                 .show();
     }
@@ -279,7 +280,8 @@ public class ConfigPacketActivity extends AppCompatActivity  implements SharedPr
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
             case REQUEST_CONNECT_DEVICE:
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
@@ -422,61 +424,61 @@ public class ConfigPacketActivity extends AppCompatActivity  implements SharedPr
         SharedPreferences.Editor editor = pref.edit();
 
         EditText et = (EditText) findViewById(R.id.editText1);
-        float number = Float.valueOf(et.getText().toString())*sc;
+        float number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v1", number);
         et = (EditText) findViewById(R.id.editText2);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v2", number);
         et = (EditText) findViewById(R.id.editText3);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v3", number);
         et = (EditText) findViewById(R.id.editText4);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v4", number);
         et = (EditText) findViewById(R.id.editText5);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v5", number);
         et = (EditText) findViewById(R.id.editText6);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v6", number);
         et = (EditText) findViewById(R.id.editText7);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v7", number);
         et = (EditText) findViewById(R.id.editText8);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v8", number);
         et = (EditText) findViewById(R.id.editText9);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v9", number);
         et = (EditText) findViewById(R.id.editText10);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v10", number);
         et = (EditText) findViewById(R.id.editText11);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v11", number);
         et = (EditText) findViewById(R.id.editText12);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v12", number);
         et = (EditText) findViewById(R.id.editText13);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v13", number);
         et = (EditText) findViewById(R.id.editText14);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v14", number);
         et = (EditText) findViewById(R.id.editText15);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v15", number);
         et = (EditText) findViewById(R.id.editText16);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v16", number);
         et = (EditText) findViewById(R.id.editText17);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v17", number);
         et = (EditText) findViewById(R.id.editText18);
-        number = Float.valueOf(et.getText().toString())*sc;
+        number = Float.parseFloat(et.getText().toString())*sc;
         editor.putFloat("cfg_v18", number);
 
-        editor.commit();
+        editor.apply();
     }
 
     public void UpdateCfg(View view) {
@@ -488,11 +490,9 @@ public class ConfigPacketActivity extends AppCompatActivity  implements SharedPr
         new AlertDialog.Builder(this)
                 .setTitle("Configuration Packet")
                 .setMessage("Clear all the values?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        WriteConfgPcktPref(0);  //Multiply all values by zero
-                        ReadConfgPcktPref();
-                    }
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    WriteConfgPcktPref(0);  //Multiply all values by zero
+                    ReadConfgPcktPref();
                 })
                 .setNegativeButton("No", null)
                 .show();

@@ -26,7 +26,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginRight="10dp"
             android:text="@string/btnA_text"
-            android:textSize="24dp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/button_B"
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/btnB_text"
-            android:textSize="24dp"
+            android:textSize="24sp"
             android:layout_weight="1" />
 
         <TextView
@@ -59,14 +59,14 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:text="@string/btnC_text"
-            android:textSize="24dp" />
+            android:textSize="24sp" />
 
         <Button
             android:id="@+id/button_D"
             android:layout_width="90dp"
             android:layout_height="wrap_content"
             android:text="@string/btnD_text"
-            android:textSize="24dp" />
+            android:textSize="24sp" />
 
     </LinearLayout>
 

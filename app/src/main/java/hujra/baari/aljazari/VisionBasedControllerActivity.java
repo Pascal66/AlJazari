@@ -247,6 +247,7 @@ public class VisionBasedControllerActivity extends AppCompatActivity implements 
         }
     }
 
+    @Override
     public void onDestroy() {
         mOpenCvCameraView.disableView();
         if (mRfcommClient != null) mRfcommClient.stop();
@@ -258,21 +259,19 @@ public class VisionBasedControllerActivity extends AppCompatActivity implements 
         new AlertDialog.Builder(this)
                 .setTitle("Line Follower")
                 .setMessage("Close this activity?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                })
+                .setPositiveButton("Yes", (dialog, which) -> finish())
                 .setNegativeButton("No", null)
                 .show();
     }
 
+    @Override
     public void onCameraViewStarted(int width, int height) {
         mGray = new Mat();
         mRgba = new Mat();
         bitmap = Mat.zeros(135, 90, CvType.CV_8UC4);
     }
 
+    @Override
     public void onCameraViewStopped() {
         mGray.release();
         mRgba.release();
@@ -395,8 +394,10 @@ public class VisionBasedControllerActivity extends AppCompatActivity implements 
         }
     }
 
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
             case REQUEST_CONNECT_DEVICE:
                 // When DeviceListActivity returns with a device to connect
                 if (resultCode == Activity.RESULT_OK) {
@@ -487,24 +488,27 @@ public class VisionBasedControllerActivity extends AppCompatActivity implements 
         return true;
     }
 
+    @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if ( key.equals("vid_res") ) {
-            Vid_Res = Integer.parseInt(prefs.getString("vid_res", "1"));
-        }
-        else if ( key.equals("min_spd") ) {
-            min_spd = Float.parseFloat(prefs.getString("min_spd","50.0"));
-        }
-        else if ( key.equals("max_spd") ) {
-            max_spd = Float.parseFloat(prefs.getString("max_spd","80.0"));
-        }
-        else if ( key.equals("pid_kp") ) {
-            Kp = Float.parseFloat(prefs.getString("pid_kp","85.0"));
-        }
-        else if ( key.equals("pid_kd") ) {
-            Kd = Float.parseFloat(prefs.getString("pid_kd","85.0"));
-        }
-        else if ( key.equals("pid_ki") ) {
-            Ki = Float.parseFloat(prefs.getString("pid_ki","1.0"));
+        switch (key) {
+            case "vid_res":
+                Vid_Res = Integer.parseInt(prefs.getString("vid_res", "1"));
+                break;
+            case "min_spd":
+                min_spd = Float.parseFloat(prefs.getString("min_spd", "50.0"));
+                break;
+            case "max_spd":
+                max_spd = Float.parseFloat(prefs.getString("max_spd", "80.0"));
+                break;
+            case "pid_kp":
+                Kp = Float.parseFloat(prefs.getString("pid_kp", "85.0"));
+                break;
+            case "pid_kd":
+                Kd = Float.parseFloat(prefs.getString("pid_kd", "85.0"));
+                break;
+            case "pid_ki":
+                Ki = Float.parseFloat(prefs.getString("pid_ki", "1.0"));
+                break;
         }
     }
 
@@ -526,7 +530,7 @@ public class VisionBasedControllerActivity extends AppCompatActivity implements 
 
     private void frame_rate() {
         //mOpenCvCameraView.enableFpsMeter(); //Builtin fps meter, gives almost the same value
-        if (init_time == false) {
+        if (!init_time) {
             time_diff = SystemClock.elapsedRealtime();
             init_time = true;
         } else {
@@ -573,7 +577,7 @@ public class VisionBasedControllerActivity extends AppCompatActivity implements 
         Core.inRange(temp, new Scalar(85, 70, 50), new Scalar(95, 255, 255), temp);//Red
 //        Core.inRange(temp, new Scalar(150-5, 70, 50), new Scalar(150+5, 255, 255), temp);//Green
 
-        List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+        List<MatOfPoint> contours = new ArrayList<>();
         Imgproc.findContours(temp, contours, new Mat(), Imgproc.RETR_LIST, Imgproc.CHAIN_APPROX_SIMPLE);
 
         MatOfPoint MainContour = null;
