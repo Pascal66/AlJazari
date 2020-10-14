@@ -292,6 +292,7 @@ public class VisionBasedControllerActivity extends AppCompatActivity implements 
         }
     }*/
 
+    @Override
     public Mat onCameraFrame(CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();

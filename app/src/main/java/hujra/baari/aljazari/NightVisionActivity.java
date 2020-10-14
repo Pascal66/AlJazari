@@ -64,17 +64,20 @@ public class NightVisionActivity extends AppCompatActivity implements CameraBrid
         }
     }
 
+    @Override
     public void onCameraViewStarted(int width, int height) {
         mGray = new Mat();
         mRgba = new Mat();
 
     }
 
+    @Override
     public void onCameraViewStopped() {
         mGray.release();
         mRgba.release();
     }
 
+    @Override
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         mRgba = inputFrame.rgba();
         mGray = inputFrame.gray();
