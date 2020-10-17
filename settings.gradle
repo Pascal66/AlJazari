@@ -3,4 +3,4 @@ include ':app'
 include ':openCVLibrary412'
 
 //TODO for .mk
-// project(':opencv').projectDir = new File('C:\\Users\\Pascal\\AndroidstudioProjects\\OpenCV-4.4.1-android-sdk\\sdk')
+// project(':opencv').projectDir = new File('C:\\Users\\Pascal\\Desktop\Apk\\OpenCV-4.4.1-android-sdk\\sdk')

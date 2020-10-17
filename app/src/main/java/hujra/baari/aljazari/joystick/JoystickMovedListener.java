@@ -1,8 +1,8 @@
 package hujra.baari.aljazari.joystick;
 
 public interface JoystickMovedListener {
-    public void OnMoved(int pan, int tilt);
-    public void OnReleased();
-    public void OnReturnedToCenter();
+    void OnMoved(int pan, int tilt);
+    void OnReleased();
+    void OnReturnedToCenter();
 }
 
